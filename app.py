@@ -7,7 +7,7 @@ import gzip
 import json
 import os
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
 from urllib.parse import parse_qs, urlparse
@@ -628,7 +628,8 @@ class RequestHandler(SimpleHTTPRequestHandler):
             self.end_headers()
 
     def handle_recommend(self, params):
-        q = params.get("query", [""])[0]
+        q_list = params.get("query") or params.get("q") or [""]
+        q = q_list[0]
         mode_name = params.get("mode", ["emotional"])[0]
         k = int(params.get("k", [8])[0])
 
